@@ -1,5 +1,5 @@
 # Bengal_meat endpoints documentation
-Weight-logger fatches current weight from a weight indicator through the `/current` endpoint and after confirmation of this value through `/confirm` endpoint it will log the value in a database which can be fatched using `/summary/start_date/end_date` or `/summary/date` endpoints.
+The landing page of weight-logger is `/carcass_form` which is a form that takes carcass details including current value of carcass.After submitting the form it will log the carcass details in a database which can be fatched using `/summary/start_date/end_date` or `/summary/date` endpoints.
 
 ## Endpoints:  
 
@@ -22,35 +22,11 @@ Example
     "unit": "kg"
 }
 ```
-### `/confirm` [POST]
-- It is a POST request.
-- After fatching current value API user needs to confirm the value to log it in the database.
-- Only logged values in the database are included in the `/summary` endpoints (described below).  
-- If the value is not confirmed by anyone then it will not be stored in the database.
-- The endpoint takes a json object as follwoing. like the same format the `/current` endpoint response.    
-
-Schema
-```schema
-{
-     "weight": number,
-    "unit": str  
-}
-```
-Example
-```json
-
-{
-    "weight": 39.4,
-    "unit": "kg"
-}
-```
-
 ### `/summary/date`[GET]
 - This is a GET request.
-- It accepts a date as an input and returns the logged weight indicator values that were verified on that particular day.
-- For instance, if someone wants to access today's data, they can do so by entering the date summary/today's date.
-  summary/today's_date.
-- The serial number of the day's confirmed weights is shown by the key *`weight_count`*.
+- It accepts a date as an input and returns the details of carcass on that particular day.
+- For instance, if someone wants to access today's data, they can do so by entering the date(`/summary/14-06-2023`)summary/today's date.
+- The serial number of the day's is shown by the key *`carcass_count`*.
 - A json array in the following format will be returned.  
 
 Schema
@@ -58,10 +34,13 @@ Schema
 
         [
         {
-            "weight_count": Integer,
-            "date_time": Date-iso-string,
-            "weight": Number,
-            "unit": String
+            "carcass_count": Integer,
+            "carcass_id": String,
+            "carcass_weight": Number,
+            "weight_unit": String,
+            "carcass_code": String,
+            "supplier_id": String,
+            "date_time": Date-iso-string
         }
         ....]
 ```
@@ -69,63 +48,106 @@ Example
 ```json
 [
     {
-        "weight_count": 1,
-        "date_time": "2023-02-27T15:28:22.743773Z",
-        "weight": 99.0,
-        "unit": "kg"
+        "carcass_count": 1,
+        "carcass_id": "320105",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-14T16:09:34.342411Z"
     },
     {
-        "weight_count": 2,
-        "date_time": "2023-02-27T15:29:35.329487Z",
-        "weight": 95.8,
-        "unit": "kg"
+        "carcass_count": 5,
+        "carcass_id": "320108",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110002",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-14T16:42:22.225898Z"
     },
     {
-        "weight_count": 3,
-        "date_time": "2023-02-27T15:55:40.056865Z",
-        "weight": 95.8,
-        "unit": "kg"
+        "carcass_count": 6,
+        "carcass_id": "320109",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100003",
+        "date_time": "2023-06-14T16:43:07.207000Z"
+    },
+    {
+        "carcass_count": 7,
+        "carcass_id": "320110",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-14T16:43:37.785487Z"
     }
+    
 ]
 ```
 ### `/summary/start_date/end_date`[GET]
 - This is also a GET request.
-- All logged values for a certain period are available at this endpoint.
-- The endpoint accepts the start date and end date of the period as inputs.
+- All logged carcass details for a certain period are available at this endpoint.
+- The endpoint accepts the start date and end date of the period as inputs (`/summary/14-06-2023/22-06-2023`).
 - It will return a array of json like the following format  
 
 Example
 ```json
 [
     {
-        "weight_count": 1,
-        "date_time": "2023-02-27T15:28:22.743773Z",
-        "weight": 99.0,
-        "unit": "kg"
+        "carcass_count": 1,
+        "carcass_id": "320105",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-14T16:09:34.342411Z"
     },
     {
-        "weight_count": 2,
-        "date_time": "2023-02-27T15:29:35.329487Z",
-        "weight": 95.8,
-        "unit": "kg"
+        "carcass_count": 5,
+        "carcass_id": "320108",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110002",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-14T16:42:22.225898Z"
     },
     {
-        "weight_count": 3,
-        "date_time": "2023-02-27T15:55:40.056865Z",
-        "weight": 95.8,
-        "unit": "kg"
+        "carcass_count": 6,
+        "carcass_id": "320109",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100003",
+        "date_time": "2023-06-14T16:43:07.207000Z"
     },
     {
-        "weight_count": 1,
-        "date_time": "2023-03-01T12:21:01.197357Z",
-        "weight": 13.6,
-        "unit": "kg"
+        "carcass_count": 7,
+        "carcass_id": "320110",
+        "carcass_weight": -49.8,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-14T16:43:37.785487Z"
     },
     {
-        "weight_count": 2,
-        "date_time": "2023-03-01T12:21:14.434483Z",
-        "weight": 84.8,
-        "unit": "kg"
+        "carcass_count": 1,
+        "carcass_id": "320111",
+        "carcass_weight": 0.0,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-17T17:24:45.215527Z"
+    },
+    {
+        "carcass_count": 1,
+        "carcass_id": "320112",
+        "carcass_weight": 45.0,
+        "weight_unit": "kg",
+        "carcass_code": "1110001",
+        "supplier_id": "CUS100001",
+        "date_time": "2023-06-22T16:52:05.808772Z"
     }
 ]
 ```
